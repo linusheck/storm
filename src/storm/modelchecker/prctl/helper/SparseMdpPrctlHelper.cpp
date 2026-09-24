@@ -1244,7 +1244,7 @@ void computeFixedPointSystemReachabilityRewards(
     }
 
     // If the solve goal has relevant values, restrict them to the states that are actually solved.
-    goal.restrictRelevantValues(qualitativeStateSets.maybeStates)
+    goal.restrictRelevantValues(qualitativeStateSets.maybeStates);
 }
 
 template<typename ValueType, typename SolutionType>
