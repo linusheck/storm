@@ -139,8 +139,8 @@ jobs:
              buildType: "Release"
           }
           - {name: "Mac 27, ARM",
-             distro: "macos-27",
-             xcode: "latest-stable",
+             distro: "xcode-27",
+             xcode: "latest",
              buildType: "Release"
           }
           - {name: "Mac 26, Intel", 
