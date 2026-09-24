@@ -1462,8 +1462,9 @@ typename SparseMdpPrctlHelper<ValueType, SolutionType>::ExtendedReturnType Spars
             } else {
                 // Set values of resulting vector according to result.
                 if constexpr (storm::IsIntervalType<ValueType>) {
-                    storm::utility::vector::setVectorValues(result, qualitativeStateSets.maybeStates,
-                                                             storm::utility::vector::filterVector(resultForMaybeStates.getValues(), qualitativeStateSets.maybeStates));
+                    storm::utility::vector::setVectorValues(
+                        result, qualitativeStateSets.maybeStates,
+                        storm::utility::vector::filterVector(resultForMaybeStates.getValues(), qualitativeStateSets.maybeStates));
                 } else {
                     storm::utility::vector::setVectorValues(result, qualitativeStateSets.maybeStates, resultForMaybeStates.getValues());
                 }
