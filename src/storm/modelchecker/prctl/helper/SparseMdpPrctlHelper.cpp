@@ -1218,39 +1218,28 @@ void computeFixedPointSystemReachabilityRewards(
     // Restrict the system to choices of states with unknown rewards. For interval models, keep all successor columns
     // so that nature can still assign probability mass to states with known values (in particular, target states).
     // If there are infinity states, also remove choices of maybe states that lead to infinity.
-    if (qualitativeStateSets.infinityStates.empty()) {
-        auto const maybeChoices = transitionMatrix.getRowFilter(qualitativeStateSets.maybeStates);
-        if constexpr (storm::IsIntervalType<ValueType>) {
-            // Keep transitions to zero-reward target states, removing them changes the feasible interval distributions.
-            submatrix = transitionMatrix.filterEntries(maybeChoices);
-        } else {
-            submatrix = transitionMatrix.getSubmatrix(true, qualitativeStateSets.maybeStates, qualitativeStateSets.maybeStates, false);
-        }
-        b = totalStateRewardVectorGetter(maybeChoices.getNumberOfSetBits(), transitionMatrix, qualitativeStateSets.maybeStates);
-        if constexpr (storm::IsIntervalType<ValueType>) {
-            // The retained matrix has all states, so give non-maybe choices a zero reward.
-            storm::utility::vector::blowUpVectorInPlace(b, maybeChoices);
-        }
-        if (oneStepTargetProbabilities) {
-            (*oneStepTargetProbabilities) =
-                transitionMatrix.getConstrainedRowGroupSumVector(qualitativeStateSets.maybeStates, qualitativeStateSets.rewardZeroStates);
-        }
+    if constexpr (storm::IsIntervalType<ValueType>) {
+        // As with reachability probabilities, retain all successor columns to preserve feasible interval distributions.
+        auto const choices = selectedChoices ? *selectedChoices : transitionMatrix.getRowFilter(qualitativeStateSets.maybeStates);
+        submatrix = transitionMatrix.filterEntries(choices);
+        b = totalStateRewardVectorGetter(transitionMatrix.getRowCount(), transitionMatrix,
+                                         storm::storage::BitVector(transitionMatrix.getRowGroupCount(), true));
+        storm::utility::vector::setVectorValues(b, ~choices, storm::utility::zero<ValueType>());
+    } else if (qualitativeStateSets.infinityStates.empty()) {
+        submatrix = transitionMatrix.getSubmatrix(true, qualitativeStateSets.maybeStates, qualitativeStateSets.maybeStates, false);
+        b = totalStateRewardVectorGetter(submatrix.getRowCount(), transitionMatrix, qualitativeStateSets.maybeStates);
     } else {
-        if constexpr (storm::IsIntervalType<ValueType>) {
-            // Retain all successor columns, including targets, to preserve feasible interval distributions.
-            submatrix = transitionMatrix.filterEntries(*selectedChoices);
-        } else {
-            submatrix = transitionMatrix.getSubmatrix(false, *selectedChoices, qualitativeStateSets.maybeStates, false);
-        }
+        submatrix = transitionMatrix.getSubmatrix(false, *selectedChoices, qualitativeStateSets.maybeStates, false);
         b = totalStateRewardVectorGetter(transitionMatrix.getRowCount(), transitionMatrix,
                                          storm::storage::BitVector(transitionMatrix.getRowGroupCount(), true));
         storm::utility::vector::filterVectorInPlace(b, *selectedChoices);
-        if constexpr (storm::IsIntervalType<ValueType>) {
-            // Match the full choice layout of the retained matrix.
-            storm::utility::vector::blowUpVectorInPlace(b, *selectedChoices);
-        }
-        if (oneStepTargetProbabilities) {
-            (*oneStepTargetProbabilities) = transitionMatrix.getConstrainedRowSumVector(*selectedChoices, qualitativeStateSets.rewardZeroStates);
+    }
+    if (oneStepTargetProbabilities) {
+        if (qualitativeStateSets.infinityStates.empty()) {
+            *oneStepTargetProbabilities =
+                transitionMatrix.getConstrainedRowGroupSumVector(qualitativeStateSets.maybeStates, qualitativeStateSets.rewardZeroStates);
+        } else {
+            *oneStepTargetProbabilities = transitionMatrix.getConstrainedRowSumVector(*selectedChoices, qualitativeStateSets.rewardZeroStates);
         }
     }
 
