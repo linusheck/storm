@@ -1243,10 +1243,8 @@ void computeFixedPointSystemReachabilityRewards(
         }
     }
 
-    if constexpr (!storm::IsIntervalType<ValueType>) {
-        // If the solve goal has relevant values and we filtered to maybe states, we need to adjust them.
-        goal.restrictRelevantValues(qualitativeStateSets.maybeStates);
-    }
+    // If the solve goal has relevant values, restrict them to the states that are actually solved.
+    goal.restrictRelevantValues(qualitativeStateSets.maybeStates)
 }
 
 template<typename ValueType, typename SolutionType>
