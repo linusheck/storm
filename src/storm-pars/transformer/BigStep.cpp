@@ -884,10 +884,10 @@ std::vector<std::pair<uint64_t, Annotation>> BigStep::findBigStep(const std::map
 }
 
 UniPolyAnnotationMap BigStep::replaceWithNewTransitions(uint64_t state, const std::vector<std::pair<uint64_t, Annotation>> transitions,
-                                                                 storage::FlexibleSparseMatrix<RationalFunction>& flexibleMatrix,
-                                                                 storage::FlexibleSparseMatrix<RationalFunction>& backwardsFlexibleMatrix,
-                                                                 storage::BitVector& reachableStates,
-                                                                 std::map<RationalFunctionVariable, std::set<uint64_t>>& treeStatesNeedUpdate) {
+                                                        storage::FlexibleSparseMatrix<RationalFunction>& flexibleMatrix,
+                                                        storage::FlexibleSparseMatrix<RationalFunction>& backwardsFlexibleMatrix,
+                                                        storage::BitVector& reachableStates,
+                                                        std::map<RationalFunctionVariable, std::set<uint64_t>>& treeStatesNeedUpdate) {
     UniPolyAnnotationMap storedAnnotations;
 
     // STORM_LOG_ASSERT(flexibleMatrix.createSparseMatrix().transpose() == backwardsFlexibleMatrix.createSparseMatrix(), "");

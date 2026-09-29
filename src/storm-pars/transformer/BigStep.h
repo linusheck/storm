@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <map>
+#include <memory>
 #include <set>
 
 #include "storm/adapters/IntervalForward.h"
@@ -201,8 +201,8 @@ class BigStep {
      * @param checkTask A property (probability or reward) on the pMC.
      * @return models::sparse::Dtmc<RationalFunction> The time-travelled pMC.
      */
-    std::pair<models::sparse::Dtmc<RationalFunction>, UniPolyAnnotationMap> bigStep(
-        models::sparse::Dtmc<RationalFunction> const& model, modelchecker::CheckTask<logic::Formula, RationalFunction> const& checkTask);
+    std::pair<models::sparse::Dtmc<RationalFunction>, UniPolyAnnotationMap> bigStep(models::sparse::Dtmc<RationalFunction> const& model,
+                                                                                    modelchecker::CheckTask<logic::Formula, RationalFunction> const& checkTask);
 
     static std::unordered_map<RationalFunction, Annotation> lastSavedAnnotations;
 
@@ -253,10 +253,10 @@ class BigStep {
      * @param treeStatesNeedUpdate The map of tree states that need updating (modifies this!)
      */
     UniPolyAnnotationMap replaceWithNewTransitions(uint64_t state, const std::vector<std::pair<uint64_t, Annotation>> transitions,
-                                                            storage::FlexibleSparseMatrix<RationalFunction>& flexibleMatrix,
-                                                            storage::FlexibleSparseMatrix<RationalFunction>& backwardsFlexibleMatrix,
-                                                            storage::BitVector& reachableStates,
-                                                            std::map<RationalFunctionVariable, std::set<uint64_t>>& treeStatesNeedUpdate);
+                                                   storage::FlexibleSparseMatrix<RationalFunction>& flexibleMatrix,
+                                                   storage::FlexibleSparseMatrix<RationalFunction>& backwardsFlexibleMatrix,
+                                                   storage::BitVector& reachableStates,
+                                                   std::map<RationalFunctionVariable, std::set<uint64_t>>& treeStatesNeedUpdate);
 
     /**
      * Updates which states are unreachable after the previous transformation without needing a model checking procedure.
