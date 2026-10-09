@@ -46,6 +46,7 @@ option(STORM_PORTABLE "Sets whether a build needs to be portable." OFF)
 MARK_AS_ADVANCED(STORM_PORTABLE)
 cmake_dependent_option(STORM_WORKAROUND_LLVM_EXPRESSION_LESS_BUG "Work around an LLVM compiler bug in std::less<Expression>." ON
 	"CMAKE_CXX_COMPILER_ID STREQUAL AppleClang" OFF)
+MARK_AS_ADVANCED(STORM_WORKAROUND_LLVM_EXPRESSION_LESS_BUG)
 # Force POPCNT is helpful for portable code targetting platforms with SSE4.2 operation support.
 option(STORM_FORCE_POPCNT "Sets whether the popcnt instruction is forced to be used (advanced)." OFF)
 MARK_AS_ADVANCED(STORM_FORCE_POPCNT)
